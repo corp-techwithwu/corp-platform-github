@@ -12,6 +12,8 @@ echo "=========================================="
 echo " Ensuring Terraform State Backend Resources"
 echo "=========================================="
 
+az account set --subscription "$SUBSCRIPTION_ID"
+
 # 1. Check & Create Resource Group
 echo "Checking Resource Group: $STATE_RG_NAME..."
 RG_EXISTS=$(az group exists --name "$STATE_RG_NAME")
