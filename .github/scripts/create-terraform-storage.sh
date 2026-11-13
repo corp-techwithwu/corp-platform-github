@@ -35,6 +35,7 @@ if [ -z "$SA_PRESENT" ]; then
     az storage account create \
         --name "$STATE_SA_NAME" \
         --resource-group "$STATE_RG_NAME" \
+        --subscription "$SUBSCRIPTION_ID" \
         --location "$STATE_LOCATION" \
         --sku "Standard_LRS" \
         --kind "StorageV2" \
