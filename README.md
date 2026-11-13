@@ -87,20 +87,7 @@ Add these values as GitHub repository secrets:
 
 > If you are using a personal Azure subscription, you can take advantage of script [bootstrap.ps1](./bootstrap.ps1).
 
-
-### 3. Create the Terraform state backend
-
-Use the workflow in:
-
-- [create-terraform-storage-account.yml](.github/workflows/create-terraform-storage-account.yml)
-
-This workflow creates the Azure storage account and container used by Terraform for remote state storage.
-
-the storage account created in [create-terraform-storage-account.yml](.github/workflows/create-terraform-storage-account.yml) need to match the file [infraascode/env/prod/backend.hcl](infraascode/env/prod/backend.hcl).
-
-![create storage account](./docs/create-sa.png)
-
-### 4. Create a Github APP and Configure organization secrets
+### 3. Create a Github APP and Configure organization secrets
 
 Create a GitHub App in your organization and assign following permissions:
 ```
@@ -120,6 +107,19 @@ Store the app credentials as organization-level secrets:
 - `CORP_PLATFORM_GITHUB_APP_SECRET`
 
 ![organization secrets](./docs/organization-credentials.png)
+
+
+### 4. Create the Terraform state backend
+
+Use the workflow in:
+
+- [create-terraform-storage-account.yml](.github/workflows/create-terraform-storage-account.yml)
+
+This workflow creates the Azure storage account and container used by Terraform for remote state storage.
+
+the storage account created in [create-terraform-storage-account.yml](.github/workflows/create-terraform-storage-account.yml) need to match the file [infraascode/env/prod/backend.hcl](infraascode/env/prod/backend.hcl).
+
+![create storage account](./docs/create-sa.png)
 
 ### 5. Run the GitHub workflows
 

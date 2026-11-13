@@ -52,9 +52,4 @@ jobs:
         uses: azure/cli@v2
         with:
           inlineScript: |
-            bash "$GITHUB_WORKSPACE/.github/scripts/create-terraform-storage.sh" \
-              "${{ inputs.subscription_id }}" \
-              "${{ inputs.state_rg_name }}" \
-              "${{ inputs.state_sa_name }}" \
-              "${{ inputs.state_container_name }}" \
-              "${{ inputs.state_location }}"
+            bash "$GITHUB_WORKSPACE/.github/scripts/azure-github-actions-diagnose.sh"
