@@ -53,6 +53,9 @@ jobs:
         uses: azure/cli@v2
         with:
           inlineScript: |
+            echo "0. Setting active subscription..."
+            az account set --subscription "${{ inputs.subscription_id }}"
+
             echo "1. Checking / Creating Resource Group: ${{ inputs.state_rg_name }}"
             az group create \
               --name "${{ inputs.state_rg_name }}" \
@@ -80,4 +83,4 @@ jobs:
               --account-name "${{ inputs.state_sa_name }}" \
               --account-key "$ACCOUNT_KEY"
 
-            echo " Terraform state storage backend is ready!"
+            echo "✅ Terraform state storage backend is ready!"
