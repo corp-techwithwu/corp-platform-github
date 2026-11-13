@@ -3,3 +3,6 @@ corp-platform-github,repo,AZURE_TENANT_ID,,secret,sp-corp-platform-management-pr
 corp-platform-github,repo,AZURE_CLIENT_ID,,secret,sp-corp-platform-management-prod
 corp-platform-github,repo,AZURE_SUBSCRIPTION_ID,,secret,sp-corp-platform-management-prod
 corp-platform-github,prod,env,prod,plaintext,
+corp-platform-foundation,repo,AZURE_TENANT_ID,,secret,sp-corp-platform-foundation-prod
+corp-platform-foundation,repo,AZURE_CLIENT_ID,,secret,sp-corp-platform-foundation-prod
+corp-platform-foundation,repo,AZURE_SUBSCRIPTION_ID,,secret,sp-corp-platform-foundation-prod
