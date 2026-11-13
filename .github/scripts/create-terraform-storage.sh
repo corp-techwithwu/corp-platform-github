@@ -1,60 +1,58 @@
-#!/usr/bin/env bash
 set -euo pipefail
 
-# Accept parameters from environment variables or arguments
-SUBSCRIPTION_ID="${1:-$AZURE_SUBSCRIPTION_ID}"
+SUBSCRIPTION_ID="${1:-${AZURE_SUBSCRIPTION_ID:-}}"
 STATE_RG_NAME="${2:-rg-terraform-state-prod}"
 STATE_SA_NAME="${3:-stcorpghasstateprod}"
 STATE_CONTAINER_NAME="${4:-tfstate}"
 STATE_LOCATION="${5:-eastus}"
 
-echo "=========================================="
-echo " Ensuring Terraform State Backend Resources"
-echo "=========================================="
+: "${SUBSCRIPTION_ID:?SUBSCRIPTION_ID is empty}"
+: "${AZURE_TENANT_ID:?AZURE_TENANT_ID is empty}"
+: "${AZURE_CLIENT_ID:?AZURE_CLIENT_ID is empty}"
 
-az account set --subscription "$SUBSCRIPTION_ID"
+echo "Expected subscription: $SUBSCRIPTION_ID"
+echo "Expected tenant:       $AZURE_TENANT_ID"
+echo "Expected client id:    $AZURE_CLIENT_ID"
 
-# 1. Check & Create Resource Group
-echo "Checking Resource Group: $STATE_RG_NAME..."
-RG_EXISTS=$(az group exists --name "$STATE_RG_NAME")
+echo "== Effective CLI context =="
+az account show --output json
 
-if [ "$RG_EXISTS" = "false" ]; then
-    echo "Creating Resource Group [$STATE_RG_NAME] in [$STATE_LOCATION]..."
-    az group create --name "$STATE_RG_NAME" --location "$STATE_LOCATION" --output none
-    echo "Resource Group created successfully."
-else
-    echo "Resource Group '$STATE_RG_NAME' already exists. Skipping."
+echo "== Subscriptions visible to THIS workflow identity =="
+az account list --all --refresh \
+  --query '[].{id:id,name:name,tenant:tenantId,state:state}' \
+  --output table
+
+echo "== Hard-check target subscription =="
+az account show --subscription "$SUBSCRIPTION_ID" --output json
+
+echo "== Hard-check RG is really in target subscription =="
+RG_JSON=$(az group show \
+  --name "$STATE_RG_NAME" \
+  --subscription "$SUBSCRIPTION_ID" \
+  --output json)
+
+echo "$RG_JSON"
+
+RG_ID=$(echo "$RG_JSON" | jq -r '.id')
+EXPECTED_ID="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${STATE_RG_NAME}"
+
+if [[ "${RG_ID,,}" != "${EXPECTED_ID,,}" ]]; then
+  echo "::error::RG exists, but not in the intended subscription. Got: $RG_ID"
+  exit 1
 fi
 
-# 2. Check & Create Storage Account
-echo "Checking Storage Account: $STATE_SA_NAME..."
-SA_PRESENT=$(az storage account show --name "$STATE_SA_NAME" --resource-group "$STATE_RG_NAME" --query "id" -o tsv 2>/dev/null || true)
+echo "RG confirmed in target subscription: $RG_ID"
 
-if [ -z "$SA_PRESENT" ]; then
-    echo "Creating Storage Account [$STATE_SA_NAME] (Standard_LRS)..."
-    az storage account create \
-        --name "$STATE_SA_NAME" \
-        --resource-group "$STATE_RG_NAME" \
-        --subscription "$SUBSCRIPTION_ID" \
-        --location "$STATE_LOCATION" \
-        --sku "Standard_LRS" \
-        --kind "StorageV2" \
-        --allow-blob-public-access false \
-        --min-tls-version "TLS1_2" \
-        --output none
-    echo "Storage Account created successfully."
-else
-    echo "Storage Account '$STATE_SA_NAME' already exists. Skipping."
-fi
+echo "== Check subscription-level IAM visibility =="
+az role assignment list \
+  --assignee "$AZURE_CLIENT_ID" \
+  --scope "/subscriptions/$SUBSCRIPTION_ID" \
+  --all \
+  --output table || true
 
-# 3. Create Blob Container (Using Azure RBAC / Entra ID login mode)
-echo "Ensuring Blob Container [$STATE_CONTAINER_NAME] exists..."
-if az storage container create \
-    --name "$STATE_CONTAINER_NAME" \
-    --account-name "$STATE_SA_NAME" \
-    --auth-mode login \
-    --output none 2>/dev/null; then
-    echo "Blob Container ensured successfully."
-else
-    echo "::warning::Container creation encountered an issue (it may already exist or role assignment is pending propagation)."
-fi
+echo "== Check Microsoft.Storage provider =="
+az provider show \
+  --namespace Microsoft.Storage \
+  --subscription "$SUBSCRIPTION_ID" \
+  --query '{namespace:namespace,state:registrationState}' \
+  --output table
