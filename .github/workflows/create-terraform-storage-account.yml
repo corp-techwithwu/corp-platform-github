@@ -6,7 +6,6 @@ on:
       subscription_id:
         description: 'Azure Subscription ID'
         required: true
-        default: '00000000-0000-0000-0000-000000000000'
         type: string
       state_rg_name:
         description: 'Resource Group Name for State'

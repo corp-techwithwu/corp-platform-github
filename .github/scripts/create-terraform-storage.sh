@@ -12,13 +12,38 @@ echo "=========================================="
 echo " Ensuring Terraform State Backend Resources"
 echo "=========================================="
 
+az account set --subscription "$SUBSCRIPTION_ID"
+
+# 0. Registering Microsoft.Storage provider
+echo "0. Checking Microsoft.Storage provider registration status..."
+PROVIDER_STATE=$(az provider show --namespace 'Microsoft.Storage' --subscription "$SUBSCRIPTION_ID" --query "registrationState" -o tsv)
+echo "Current Microsoft.Storage state: $PROVIDER_STATE"
+
+if [ "$PROVIDER_STATE" != "Registered" ]; then
+    echo "Microsoft.Storage is not registered. Registering now..."
+    az provider register --namespace 'Microsoft.Storage' --subscription "$SUBSCRIPTION_ID"
+    
+    echo "Waiting for Microsoft.Storage provider to be fully registered (this may take a minute)..."
+    while true; do
+        PROVIDER_STATE=$(az provider show --namespace 'Microsoft.Storage' --subscription "$SUBSCRIPTION_ID" --query "registrationState" -o tsv)
+        echo "Current state: $PROVIDER_STATE"
+        if [ "$PROVIDER_STATE" = "Registered" ]; then
+            echo "Microsoft.Storage registered successfully!"
+            break
+        fi
+        sleep 10
+    done
+else
+    echo "Microsoft.Storage is already registered."
+fi
+
 # 1. Check & Create Resource Group
 echo "Checking Resource Group: $STATE_RG_NAME..."
 RG_EXISTS=$(az group exists --name "$STATE_RG_NAME")
 
 if [ "$RG_EXISTS" = "false" ]; then
     echo "Creating Resource Group [$STATE_RG_NAME] in [$STATE_LOCATION]..."
-    az group create --name "$STATE_RG_NAME" --location "$STATE_LOCATION" --output none
+    az group create --name "$STATE_RG_NAME" --location "$STATE_LOCATION" --subscription "$SUBSCRIPTION_ID" --output none
     echo "Resource Group created successfully."
 else
     echo "Resource Group '$STATE_RG_NAME' already exists. Skipping."
@@ -26,13 +51,14 @@ fi
 
 # 2. Check & Create Storage Account
 echo "Checking Storage Account: $STATE_SA_NAME..."
-SA_PRESENT=$(az storage account show --name "$STATE_SA_NAME" --resource-group "$STATE_RG_NAME" --query "id" -o tsv 2>/dev/null || true)
+SA_PRESENT=$(az storage account show --name "$STATE_SA_NAME" --resource-group "$STATE_RG_NAME" --subscription "$SUBSCRIPTION_ID" --query "id" -o tsv 2>/dev/null || true)
 
 if [ -z "$SA_PRESENT" ]; then
     echo "Creating Storage Account [$STATE_SA_NAME] (Standard_LRS)..."
     az storage account create \
         --name "$STATE_SA_NAME" \
         --resource-group "$STATE_RG_NAME" \
+        --subscription "$SUBSCRIPTION_ID" \
         --location "$STATE_LOCATION" \
         --sku "Standard_LRS" \
         --kind "StorageV2" \

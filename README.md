@@ -48,6 +48,8 @@ Before using this repository, make sure you have:
 
 Fork `corp-platform-github` into your organization and push it to your own GitHub org(eg: `corp-techwithwu`).
 
+#### Set your organization's Base permissions to No permissions. 
+
 > [!IMPORTANT]
 >
 > Set the organization's Base permissions to No permissions.
@@ -62,37 +64,30 @@ Update the repository reference used by the `bootstrap.ps1` script to match your
 
 ### 2. Bootstrap Azure and GitHub OIDC
 
-From PowerShell, run:
+Go to your azure portal, create a subscription and a management group(eg subscription: `corp-platform-management-prod`, management group: `Corp Platform Root Group`), and move your subscription into the created group.
 
-```powershell
-./bootstrap.ps1
-```
+![move subscription to your created management group](./docs/subscription-and-management-group.png)
 
-This script configures the Azure context and sets up OIDC connectivity for GitHub Actions. It is intended to generate the values needed for repository secrets.
+Go your Azure Portal, and create a service principal(eg: `sp-corp-platform-management-prod`).
 
-After the script runs, store the following values as GitHub repository secrets:
+Once your service principal has been created, add github federated credentials. you can view your organization id and repo by github api(eg: `https://api.github.com/repos/corp-techwithwu/corp-platform-github`)  
+![create federated credentials for github](./docs/bootstrap-federated-credential.png)
 
+Add `contributor` and `Storage Blob Data Contributor` role to subscription `corp-platform-management-prod`
+![add IMA](./docs/corp-platform-management-ima.png)
+
+And then retrieve the following values:
 - `AZURE_CLIENT_ID`
 - `AZURE_TENANT_ID`
 - `AZURE_SUBSCRIPTION_ID`
 
-If you are using a personal Azure subscription, you may need to create or assign a subscription explicitly before continuing. See `scripts/generatesubscription.ps1`.
-
+Add these values as GitHub repository secrets:
 ![repository secrets](./docs/repository-credentials.png)
 
-### 3. Create the Terraform state backend
 
-Use the workflow in:
+> If you are using a personal Azure subscription, you can take advantage of script [bootstrap.ps1](./bootstrap.ps1).
 
-- `.github/workflows/create-terraform-storage-account.yml`
-
-This workflow creates the Azure storage account and container used by Terraform for remote state storage.
-
-You can adjust the parameters based on the file `githubascode/env/dev/backend.hcl` and `githubascode/env/dev/backend.hcl` 
-
-![create storage account](./docs/create-sa.png)
-
-### 4. Create a Github APP and Configure organization secrets
+### 3. Create a Github APP and Configure organization secrets
 
 Create a GitHub App in your organization and assign following permissions:
 ```
@@ -102,8 +97,8 @@ Permissions:
  Read and write access to actions, actions variables, administration, code, environments, issues, members, pull requests, repository creation, and secrets
 ```
 
+And then install it in the org`corp-techwithwu`.
 
-Install it in the org. 
 ![github app](./docs/github-app.png)
 
 Store the app credentials as organization-level secrets:
@@ -113,16 +108,34 @@ Store the app credentials as organization-level secrets:
 
 ![organization secrets](./docs/organization-credentials.png)
 
-### 5. Run the GitHub workflows
+You can also assign visibility to sub repositories in the settings. Adjust its visibility according to your needs.
+![organization Secrets Visibility](./docs/organization-secrets-visibility.png)
 
-The repository includes validation and deployment workflows:
+### 4. Create the Terraform state backend
 
-- `gac-terraform-unit-tests.yml` — Terraform validation and unit-style checks
-- `gac-terraform-test-plan-apply-prod.yml` — test, plan, and apply flow for production
+Use the workflow in:
 
-### 6. Create a branch and submit a PR
+- [create-terraform-storage-account.yml](.github/workflows/create-terraform-storage-account.yml)
+
+This workflow creates the Azure storage account and container used by Terraform for remote state storage.
+
+the storage account created in [create-terraform-storage-account.yml](.github/workflows/create-terraform-storage-account.yml) need to match the file [infraascode/env/prod/backend.hcl](infraascode/env/prod/backend.hcl).
+
+![create storage account](./docs/create-sa.png)
+
+It may took some time if it's the first time you run, as the fresh subscription usually doesn't have 'Microsoft.Storage' registered. the script will trigger the registering, but it may take several minutes. for more details look at [create-terraform-storage.sh](.github/scripts/create-terraform-storage.sh)
+![storage registered](./docs/storage-registered.png)
+
+
+### 5. Create a branch and submit a PR
 
 Create a feature branch from `main`, make your changes, and open a pull request against the default branch.
+
+then the following two workflows will be triggered:
+
+- [gac-terraform-unit-tests.yml](.github/workflows/gac-terraform-unit-tests.yml) — Terraform validation and unit-style checks
+- [gac-terraform-test-plan-apply-prod.yml](.github/workflows/gac-terraform-test-plan-apply-prod.yml) — test, plan, and apply flow for production
+
 
 ## Repository structure
 
