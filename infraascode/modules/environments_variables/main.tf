@@ -72,6 +72,7 @@ resource "github_actions_environment_variable" "env_variable" {
   repository    = each.value.repo
   environment   = each.value.env_or_repo
   variable_name = each.value.key
+  # checkov:skip=CKV_GIT_4: the value is not sensitive, using this to store non-sensitive variables
   value         = each.value.resolved_value
 }
 
@@ -82,5 +83,6 @@ resource "github_actions_environment_secret" "env_secret" {
   repository      = each.value.repo
   environment     = each.value.env_or_repo
   secret_name     = each.value.key
+  # checkov:skip=CKV_GIT_4: real value is resolved from Azure SP, so no hardcoded secret here
   plaintext_value = each.value.resolved_value
 }
