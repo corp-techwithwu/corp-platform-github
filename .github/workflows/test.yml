@@ -1,0 +1,83 @@
+name: 'Create Terraform State Storage Account'
+
+on:
+  workflow_dispatch:
+    inputs:
+      subscription_id:
+        description: 'Azure Subscription ID'
+        required: true
+        default: '6b80b8d5-aef4-4952-8558-1f1b168f47a6'
+        type: string
+      state_rg_name:
+        description: 'Resource Group Name for State'
+        required: false
+        default: 'rg-tfstate-prod'
+        type: string
+      state_sa_name:
+        description: 'Storage Account Name for State'
+        required: false
+        default: 'stcorpplatformgithubprod'
+        type: string
+      state_container_name:
+        description: 'Blob Container Name for State'
+        required: false
+        default: 'corpplatformgithubprod'
+        type: string
+      state_location:
+        description: 'Azure Region Location'
+        required: false
+        default: 'centralus'
+        type: string
+
+permissions:
+  id-token: write  # Required for Azure OIDC Login
+  contents: read
+
+jobs:
+  create-storage:
+    name: 'Ensure Terraform Storage Backend'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v4
+
+      - name: 'Azure CLI Login (OIDC Passwordless)'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ inputs.subscription_id }}
+
+      - name: 'Create Resource Group and Storage Account'
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            echo "1. Checking / Creating Resource Group: ${{ inputs.state_rg_name }}"
+            az group create \
+              --name "${{ inputs.state_rg_name }}" \
+              --location "${{ inputs.state_location }}"
+
+            echo "2. Checking / Creating Storage Account: ${{ inputs.state_sa_name }}"
+            az storage account create \
+              --name "${{ inputs.state_sa_name }}" \
+              --resource-group "${{ inputs.state_rg_name }}" \
+              --location "${{ inputs.state_location }}" \
+              --sku Standard_LRS \
+              --kind StorageV2 \
+              --allow-blob-public-access false \
+              --min-tls-version TLS1_2
+
+            echo "3. Getting Storage Account Key..."
+            ACCOUNT_KEY=$(az storage account keys list \
+              --resource-group "${{ inputs.state_rg_name }}" \
+              --account-name "${{ inputs.state_sa_name }}" \
+              --query '[0].value' -o tsv)
+
+            echo "4. Checking / Creating Blob Container: ${{ inputs.state_container_name }}"
+            az storage container create \
+              --name "${{ inputs.state_container_name }}" \
+              --account-name "${{ inputs.state_sa_name }}" \
+              --account-key "$ACCOUNT_KEY"
+
+            echo " Terraform state storage backend is ready!"
