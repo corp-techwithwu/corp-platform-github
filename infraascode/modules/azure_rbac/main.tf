@@ -21,9 +21,6 @@ resource "azurerm_role_assignment" "this" {
 
   # skip service principal aad check, as may encounter ADD->ARM replication delay
   skip_service_principal_aad_check = true
-
-  # support for description: azurerm provider 4.0+, delete this line if using older version
-  description = each.value.description
 }
 
 # RBAC propagation buffer: downstream (business repo first run) depends on it to avoid 403 within 60s
