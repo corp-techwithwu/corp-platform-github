@@ -68,6 +68,7 @@ module "azure_federated_credentials" {
   application_object_ids = module.azure_service_principals.application_object_ids
   github_owner           = var.github_owner
   repository_ids         = module.repositories.repository_ids
+  organization_id        = data.github_organization.this.id
 
   depends_on = [module.repositories, module.azure_service_principals]
 }
