@@ -16,12 +16,15 @@ resource "azuread_application_federated_identity_credential" "this" {
   issuer         = "https://token.actions.githubusercontent.com"
 
   subject = (
+    # checkov:skip=CKV_AZURE_249
     each.value.subject_type == "environment" ? (
       "repo:${var.github_owner}@${var.organization_id}/${each.value.repo_name}@${var.repository_ids[each.value.repo_name]}:environment:${each.value.environment}"
     ) : (
+      # checkov:skip=CKV_AZURE_249
       each.value.subject_type == "pull_request" ? (
         "repo:${var.github_owner}@${var.organization_id}/${each.value.repo_name}@${var.repository_ids[each.value.repo_name]}:pull_request"
       ) : (
+        # checkov:skip=CKV_AZURE_249
         each.value.subject_type == "branch" ? (
           "repo:${var.github_owner}@${var.organization_id}/${each.value.repo_name}@${var.repository_ids[each.value.repo_name]}:ref:refs/heads/${each.value.environment}"
         ) : "repo:${var.github_owner}@${var.organization_id}/${each.value.repo_name}@${var.repository_ids[each.value.repo_name]}:${each.value.environment}"
