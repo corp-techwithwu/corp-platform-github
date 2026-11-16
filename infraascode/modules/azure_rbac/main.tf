@@ -17,7 +17,7 @@ resource "azurerm_role_assignment" "this" {
 
   # dynamic ABAC: only inject when condition_mode == "exclude_privileged"
   condition_version = "2.0"
-  condition         = local.exclude_privileged_condition
+  condition         = var.exclude_privileged_condition
 
   # skip service principal aad check, as may encounter ADD->ARM replication delay
   skip_service_principal_aad_check = true
