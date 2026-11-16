@@ -15,9 +15,9 @@ resource "github_repository" "this" {
   has_wiki     = each.value.has_wiki
   has_projects = try(each.value.has_projects, false)
 
-  allow_merge_commit     = false
+  allow_merge_commit     = true
   allow_squash_merge     = true
-  allow_rebase_merge     = false
+  allow_rebase_merge     = true
   delete_branch_on_merge = true
 }
 
