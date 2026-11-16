@@ -55,6 +55,7 @@ module "azure_rbac" {
   source                       = "./modules/azure_rbac"
   rbac_assignments             = local.rbac_assignments_data
   service_principal_object_ids = module.azure_service_principals.service_principal_object_ids
+  exclude_privileged_condition = local.exclude_privileged_condition
 
   depends_on = [module.azure_service_principals]
 }
