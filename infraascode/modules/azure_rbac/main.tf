@@ -24,7 +24,7 @@ resource "azurerm_role_assignment" "this" {
 }
 
 # RBAC propagation buffer: downstream (business repo first run) depends on it to avoid 403 within 60s
-resource "time_sleep" "rbac_propagation" {
-  depends_on      = [azurerm_role_assignment.this]
-  create_duration = "60s"
-}
+# resource "time_sleep" "rbac_propagation" {
+#   depends_on      = [azurerm_role_assignment.this]
+#   create_duration = "60s"
+# }
