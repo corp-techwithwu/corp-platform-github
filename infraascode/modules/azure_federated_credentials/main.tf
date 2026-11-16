@@ -9,7 +9,6 @@ resource "azuread_application_federated_identity_credential" "this" {
     if contains(keys(var.application_object_ids), v.sp_name)
   }
 
-  repository_id  = var.repository_ids[each.value.repo_name]
   application_id = var.application_object_ids[each.value.sp_name]
   display_name   = substr(replace("${each.value.repo_name}-${each.value.subject_type}-${each.value.environment}", "_", "-"), 0, 120)
   description    = "GitHub Actions OIDC subject for ${each.value.repo_name} (${each.value.environment})"
@@ -18,14 +17,14 @@ resource "azuread_application_federated_identity_credential" "this" {
 
   subject = (
     each.value.subject_type == "environment" ? (
-      "repo:${var.github_owner}@${var.organization_id}/${each.value.repo_name}@${var.repository_id}:environment:${each.value.environment}"
+      "repo:${var.github_owner}@${var.organization_id}/${each.value.repo_name}@${var.repository_ids[each.value.repo_name]}:environment:${each.value.environment}"
     ) : (
       each.value.subject_type == "pull_request" ? (
-        "repo:${var.github_owner}@${var.organization_id}/${each.value.repo_name}@${var.repository_id}:pull_request"
+        "repo:${var.github_owner}@${var.organization_id}/${each.value.repo_name}@${var.repository_ids[each.value.repo_name]}:pull_request"
       ) : (
         each.value.subject_type == "branch" ? (
-          "repo:${var.github_owner}@${var.organization_id}/${each.value.repo_name}@${var.repository_id}:ref:refs/heads/${each.value.environment}"
-        ) : "repo:${var.github_owner}@${var.organization_id}/${each.value.repo_name}@${var.repository_id}:${each.value.environment}"
+          "repo:${var.github_owner}@${var.organization_id}/${each.value.repo_name}@${var.repository_ids[each.value.repo_name]}:ref:refs/heads/${each.value.environment}"
+        ) : "repo:${var.github_owner}@${var.organization_id}/${each.value.repo_name}@${var.repository_ids[each.value.repo_name]}:${each.value.environment}"
       )
     )
   )
