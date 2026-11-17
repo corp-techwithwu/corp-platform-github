@@ -1,3 +1,5 @@
 sp_name,scope_type,scope_ref,role_definition_name,condition_mode,principal_type,description
 sp-corp-platform-management-prod,subscription,/subscriptions/6b80b8d5-aef4-4952-8558-1f1b168f47a6,Contributor,,ServicePrincipal,builds github as code and role assignment
 sp-corp-platform-management-prod,subscription,/subscriptions/6b80b8d5-aef4-4952-8558-1f1b168f47a6,Storage Blob Data Contributor,,ServicePrincipal,builds terraform storage account backend
+sp-corp-platform-alz-management-prod,subscription,/subscriptions/0279c025-6a98-4319-8b47-43fa5c608c02,Contributor,,ServicePrincipal,builds github as code and role assignment
+sp-corp-platform-alz-management-prod,subscription,/subscriptions/0279c025-6a98-4319-8b47-43fa5c608c02,Storage Blob Data Contributor,,ServicePrincipal,builds terraform storage account backend
