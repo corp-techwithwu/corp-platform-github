@@ -44,7 +44,7 @@ import {
 
 # Import: Azure Federated Credentials
 import {
-  to = module.azure_federated_credentials.azuread_application_federated_identity_credential.this["sp-corp-platform-management-prod:corp-platform-github:developer"]
+  to = module.azure_federated_credentials.azuread_application_federated_identity_credential.this["sp-corp-platform-management-prod:corp-platform-github:develop"]
   id = "e12f41c6-34bc-462b-8fb2-a6af8ff141ef/federatedIdentityCredential/de60f300-5ba9-4c7a-becc-1c82b7e4e357"
 }
 
