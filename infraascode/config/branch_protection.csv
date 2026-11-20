@@ -5,3 +5,5 @@ corp-platform-foundation,main,false,false,false,false,true,false,true,true,2,tru
 corp-platform-foundation,develop,false,false,false,false,true,false,false,true,1,true
 corp-platform-management,main,false,false,false,false,true,false,true,true,2,true
 corp-platform-management,develop,false,false,false,false,true,false,false,true,1,true
+corp-platform-connectivity,main,false,false,false,false,true,false,true,true,2,true
+corp-platform-connectivity,develop,false,false,false,false,true,false,false,true,1,true
