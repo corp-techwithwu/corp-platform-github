@@ -15,7 +15,11 @@ output "service_principal_object_ids" {
 
 output "application_object_ids" {
   description = "Map of service principal name to Azure AD application object_id"
-  value       = { for name, app in azuread_application.this : name => app.id }
+  value = {
+    for name, app in azuread_application.this : name => (
+      startswith(app.id, "/") ? app.id : "/${app.id}"
+    )
+  }
 }
 
 output "client_ids" {
