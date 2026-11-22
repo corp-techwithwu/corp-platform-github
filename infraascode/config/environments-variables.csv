@@ -9,5 +9,7 @@ corp-platform-management,repo,AZURE_TENANT_ID,,azure_credential,sp-corp-platform
 corp-platform-management,repo,AZURE_CLIENT_ID,,azure_credential,sp-corp-platform-alz-management-prod
 corp-platform-management,repo,AZURE_SUBSCRIPTION_ID,0279c025-6a98-4319-8b47-43fa5c608c02,secret,sp-corp-platform-alz-management-prod
 corp-platform-connectivity,repo,AZURE_TENANT_ID,,azure_credential,sp-corp-platform-alz-connectivity-prod
-corp-platform-connectivity,repo,AZURE_CLIENT_ID,,azure_credential,sp-corp-platform-alz-connectivity-prod
-corp-platform-connectivity,repo,AZURE_SUBSCRIPTION_ID,7f493ff6-603b-4254-a6bf-e9acfc665866,secret,sp-corp-platform-alz-connectivity-prod
+corp-platform-connectivity,prod,AZURE_CLIENT_ID,,azure_credential,sp-corp-platform-alz-connectivity-prod
+corp-platform-connectivity,prod,AZURE_SUBSCRIPTION_ID,7f493ff6-603b-4254-a6bf-e9acfc665866,secret,sp-corp-platform-alz-connectivity-prod
+corp-platform-connectivity,prod-ro,AZURE_CLIENT_ID,,azure_credential,sp-corp-platform-alz-connectivity-readonly-prod
+corp-platform-connectivity,prod-ro,AZURE_SUBSCRIPTION_ID,7f493ff6-603b-4254-a6bf-e9acfc665866,secret,sp-corp-platform-alz-connectivity-readonly-prod
