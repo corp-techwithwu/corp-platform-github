@@ -20,7 +20,7 @@ locals {
     if trimspace(try(m.username, "")) != ""
   ])
 
-  allowed_environments = ["dev", "dev-ro", "qa", "qa-ro", "test", "test-ro", "prod", "prod-ro"]
+  allowed_environments = ["dev", "qa", "test", "prod", "prod-plan"]
   allowed_branches     = ["main", "develop"]
 
   # 1. Collect all repository names referenced across other configuration files
@@ -156,7 +156,7 @@ resource "terraform_data" "validate_environments" {
   lifecycle {
     precondition {
       condition     = length(local.invalid_environments) == 0
-      error_message = "VALIDATION FAILED: Allowed environments are strictly [dev, dev-ro, qa, qa-ro, test, test-ro, prod, prod-ro] (or 'repo' in environments-variables.csv). Found invalid environments: [${join(", ", local.invalid_environments)}]."
+      error_message = "VALIDATION FAILED: Allowed environments are strictly [dev, qa, test, prod, prod-plan] (or 'repo' in environments-variables.csv). Found invalid environments: [${join(", ", local.invalid_environments)}]."
     }
   }
 }
