@@ -2,4 +2,4 @@ name,owner_team,purpose
 sp-corp-platform-management-prod,corp-platform-github,delegates roles only
 sp-corp-platform-alz-management-prod,corp-platform-management,delegates roles only
 sp-corp-platform-alz-connectivity-prod,corp-platform-connectivity,delegates roles only
-sp-corp-platform-alz-connectivity-readonly-prod,corp-platform-connectivity,delegates roles only
+sp-corp-platform-alz-connectivity-plan-prod,corp-platform-connectivity,delegates roles only
