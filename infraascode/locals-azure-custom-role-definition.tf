@@ -1,14 +1,11 @@
 locals {
   azure_custom_role_definitions = {
-    vnet_peering_operator_alz = {
-      name        = "VNet Peering Operator(alz)"
+    vnet_peering_reader_and_peer_alz = {
+      name        = "VNet Peering Reader & Peer(alz)"
       scope       = "/providers/Microsoft.Management/managementGroups/alz"
       description = "Allows VNet peering actions across spoke VNets under the management group."
       permissions = [
         "Microsoft.Network/virtualNetworks/read",
-        "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/read",
-        "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/write",
-        "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/delete",
         "Microsoft.Network/virtualNetworks/peer/action"
       ]
       not_actions = []
