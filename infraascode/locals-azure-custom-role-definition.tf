@@ -12,6 +12,20 @@ locals {
       assignable_scopes = [
         "/providers/Microsoft.Management/managementGroups/alz"
       ]
+    },
+    bicep_what_if_alz = {
+      name        = "Bicep What If(alz)"
+      scope       = "/providers/Microsoft.Management/managementGroups/alz"
+      description = "Allows Bicep to run whatIf command"
+      permissions = [
+        "*/read",
+        "Microsoft.Resources/deployments/whatIf/action",
+        "Microsoft.Resources/deployments/validate/action"
+      ]
+      not_actions = []
+      assignable_scopes = [
+        "/providers/Microsoft.Management/managementGroups/alz"
+      ]
     }
   }
 }
