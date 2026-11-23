@@ -13,14 +13,14 @@ locals {
         "/providers/Microsoft.Management/managementGroups/alz"
       ]
     },
-    bicep_what_if_alz = {
-      name        = "Bicep What If(alz)"
+    deployment_stacks_whatif_operator_with_no_rbac_alz = {
+      name        = "Deployment Stacks What-If Operator With No RBAC(alz)"
       scope       = "/providers/Microsoft.Management/managementGroups/alz"
-      description = "Allows Bicep to run whatIf command"
+      description = "Minimum permissions to create deployment stack what-if results alongside Reader with ProviderNoRbac."
       permissions = [
         "*/read",
-        "Microsoft.Resources/deployments/whatIf/action",
-        "Microsoft.Resources/deployments/validate/action"
+        "Microsoft.Resources/deploymentStacksWhatIfResults/write",
+        "Microsoft.Resources/deploymentStacks/manageDenySetting/action"
       ]
       not_actions = []
       assignable_scopes = [
