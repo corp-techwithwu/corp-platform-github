@@ -57,7 +57,7 @@ module "azure_rbac" {
   service_principal_object_ids = module.azure_service_principals.service_principal_object_ids
   exclude_privileged_condition = local.exclude_privileged_condition
 
-  depends_on = [module.azure_service_principals]
+  depends_on = [module.azure_service_principals, module.azure_custom_role_definition]
 }
 
 # 8. Azure Federated Credentials Module
@@ -93,4 +93,11 @@ module "environments_variables" {
     module.environments,
     module.repositories
   ]
+}
+
+# 10. Custom Role Definition
+module "azure_custom_role_definition" {
+  source = "./modules/azure_custom_role_definition"
+
+  custom_roles = local.azure_custom_role_definitions
 }
