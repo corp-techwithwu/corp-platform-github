@@ -21,6 +21,7 @@ locals {
         "*/read",
         "Microsoft.Resources/deployments/whatIf/action",
         "Microsoft.Resources/deploymentStacksWhatIfResults/write",
+        "Microsoft.Resources/deploymentStacksWhatIfResults/whatIf/action",
         "Microsoft.Resources/deploymentStacks/manageDenySetting/action"
       ]
       not_actions = []
