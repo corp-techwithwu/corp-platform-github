@@ -16,9 +16,10 @@ locals {
     deployment_stacks_whatif_operator_with_no_rbac_alz = {
       name        = "Deployment Stacks What-If Operator With No RBAC(alz)"
       scope       = "/providers/Microsoft.Management/managementGroups/alz"
-      description = "Minimum permissions to create deployment stack what-if results alongside Reader with ProviderNoRbac."
+      description = "Permissions to create deployment stack what-if results alongside Reader with ProviderNoRbac."
       permissions = [
         "*/read",
+        "Microsoft.Resources/deployments/whatIf/action",
         "Microsoft.Resources/deploymentStacksWhatIfResults/write",
         "Microsoft.Resources/deploymentStacks/manageDenySetting/action"
       ]
