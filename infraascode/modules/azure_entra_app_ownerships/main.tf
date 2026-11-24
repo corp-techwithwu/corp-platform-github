@@ -41,10 +41,3 @@ resource "azuread_application_owner" "registration" {
   application_id  = data.azuread_application.apps[each.value.managed_app].object_id
   owner_object_id = local.sp_object_id_by_display_name[each.value.owner_app]
 }
-
-resource "azuread_service_principal_owner" "enterprise_app" {
-  for_each = local.enterprise_app_owners
-
-  service_principal_id = local.sp_object_id_by_display_name[each.value.managed_app]
-  owner_object_id      = local.sp_object_id_by_display_name[each.value.owner_app]
-}
