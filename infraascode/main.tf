@@ -104,7 +104,7 @@ module "azure_custom_role_definition" {
 
 # 11. Custom Role Definition
 module "azure_entra_app_ownerships" {
-  source = "./module/azure_entra_app_ownerships"
+  source = "./modules/azure_entra_app_ownerships"
 
   ownerships = local.azure_entra_app_ownerships
 
