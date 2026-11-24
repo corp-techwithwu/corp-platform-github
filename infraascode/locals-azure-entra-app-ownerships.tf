@@ -6,7 +6,6 @@ locals {
       managed_app      = trimspace(row.managed_app)
       owner_app        = trimspace(row.owner_app)
       assign_app_owner = tobool(lower(trimspace(row.assign_app_owner)))
-      assign_sp_owner  = tobool(lower(trimspace(row.assign_sp_owner)))
       purpose          = trimspace(row.purpose)
     }
   ]

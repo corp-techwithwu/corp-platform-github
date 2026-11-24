@@ -106,7 +106,9 @@ module "azure_custom_role_definition" {
 module "azure_entra_app_ownerships" {
   source = "./modules/azure_entra_app_ownerships"
 
-  ownerships = local.azure_entra_app_ownerships
+  ownerships                   = local.azure_entra_app_ownerships
+  application_resource_ids     = module.azure_service_principals.application_object_ids
+  service_principal_object_ids = module.azure_service_principals.service_principal_object_ids
 
   depends_on = [
     module.azure_service_principals
