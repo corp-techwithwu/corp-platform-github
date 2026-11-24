@@ -4,4 +4,6 @@ sp-corp-platform-alz-management-prod,corp-platform-management,delegates roles on
 sp-corp-platform-alz-connectivity-prod,corp-platform-connectivity,delegates roles only
 sp-corp-platform-alz-connectivity-plan-prod,corp-platform-connectivity,delegates roles only
 sp-corp-bu-alz-finance-infra-prod,corp-bu-finance-infra,delegates roles only
+sp-corp-bu-alz-finance-infra-api-app-prod,corp-bu-finance-infra,for apiAppModule SimpleOAuth2
+sp-corp-bu-alz-finance-infra-web-app-prod,corp-bu-finance-infra,for webAppModule SimpleOAuth2
 sp-corp-bu-alz-finance-infra-plan-prod,corp-bu-finance-infra,delegates roles only
