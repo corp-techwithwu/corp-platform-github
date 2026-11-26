@@ -16,7 +16,5 @@ corp-platform-connectivity,prod-plan,AZURE_SUBSCRIPTION_ID,7f493ff6-603b-4254-a6
 corp-bu-finance-infra,repo,AZURE_TENANT_ID,,azure_credential,sp-corp-bu-alz-finance-infra-prod
 corp-bu-finance-infra,prod,AZURE_CLIENT_ID,,azure_credential,sp-corp-bu-alz-finance-infra-prod
 corp-bu-finance-infra,prod,AZURE_SUBSCRIPTION_ID,34ba0e48-d670-4185-9415-b76e14524ff9,secret,sp-corp-bu-alz-finance-infra-prod
-corp-bu-finance-infra,prod,PIPELINE_SP_OBJECT_ID,2ee40fbe-fb26-4dcf-9270-9bf4f8ea0a9a,secret,sp-corp-bu-alz-finance-infra-prod
 corp-bu-finance-infra,prod-plan,AZURE_CLIENT_ID,,azure_credential,sp-corp-bu-alz-finance-infra-plan-prod
 corp-bu-finance-infra,prod-plan,AZURE_SUBSCRIPTION_ID,34ba0e48-d670-4185-9415-b76e14524ff9,secret,sp-corp-bu-alz-finance-infra-plan-prod
-corp-bu-finance-infra,prod-plan,PIPELINE_SP_OBJECT_ID,2ee40fbe-fb26-4dcf-9270-9bf4f8ea0a9a,secret,sp-corp-bu-alz-finance-infra-plan-prod
